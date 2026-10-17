@@ -22,7 +22,12 @@ export const appState: AppStateType = $state({ // appstate exactly like glimmer'
     acrylicBlurBar: "8px",
     acrylicUserBanner: false,
     acrylicPopUpColr: "#000000",
-    
+
+    // typing 
+    singleTyping: "is typing...",
+    moreThan2Typing: "are typing...",
+    severalTyping: "Several people are typing",
+
     // image viewer
     imageViewerBlur: "4px",
     imageOverlayColr: "#000000",
@@ -65,6 +70,11 @@ type AppStateType = {
     acrylicBlurBar: string,
     acrylicUserBanner: boolean,
     acrylicPopUpColr: string,
+
+    // typing
+    singleTyping: string;
+    moreThan2Typing: string;
+    severalTyping: string;
 
     // image viewer
     imageViewerBlur: string;

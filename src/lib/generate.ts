@@ -82,6 +82,17 @@ export async function generate() {
         rule.walkDecls('--message-highlight-fade-out', decl => {
             decl.value = appState.msgFadeOut;
         });
+
+
+        rule.walkDecls('--typing-one', decl => {
+            decl.value = appState.singleTyping;
+        });
+        rule.walkDecls('--typing-many', decl => {
+            decl.value = appState.moreThan2Typing;
+        });
+        rule.walkDecls('--typing-several', decl => {
+            decl.value = appState.severalTyping;
+        });
     })
 
     return root.toString()

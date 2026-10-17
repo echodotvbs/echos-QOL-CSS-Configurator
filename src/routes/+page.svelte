@@ -114,6 +114,24 @@
 </fieldset>
 
 <fieldset class="section">
+    <legend>Typing</legend>
+    <div class="row">
+        <div>
+            <label for="menu-height">Single person typing</label>
+            <input type="text" id="menu-height" bind:value={appState.singleTyping} />
+        </div>
+        <div>
+            <label for="menu-width">More than 2 people typing</label>
+            <input type="text" id="menu-width" bind:value={appState.moreThan2Typing} />
+        </div>
+        <div>
+            <label for="menu-radius">Several people typing</label>
+            <input type="text" id="menu-radius" bind:value={appState.severalTyping} />
+        </div>
+    </div>
+</fieldset>
+
+<fieldset class="section">
     <legend>Acrylic related</legend>
     <div class="row">
         <div>
