@@ -1,0 +1,773 @@
+@import 'tailwindcss';
+:root {
+    color-scheme: light dark;
+}
+
+body {
+    font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+.sub {
+    opacity: 0.7;
+    margin-top: 0;
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin: 16px 0 6px;
+}
+
+textarea,
+input {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.9rem;
+    padding: 8px;
+    border: 1px solid #888;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.chip {
+    border: 1px solid #888;
+    border-radius: 4px;
+    padding: 1px 6px;
+    cursor: pointer;
+    background: none;
+    color: inherit;
+    font: inherit;
+}
+
+.chip.literal {
+    opacity: 0.85;
+}
+
+.chip.wild {
+    background: #2d7ff933;
+    border-color: #2d7ff9;
+}
+
+.chip.cap {
+    background: #f0a03033;
+    border-color: #f0a030;
+}
+
+.legend {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin-top: 6px;
+}
+
+.output {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.85rem;
+    padding: 12px;
+    border: 1px solid #888;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    position: relative;
+}
+
+.copy {
+    margin-top: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #888;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.status {
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.ok {
+    color: #2e9e4f;
+}
+
+.bad {
+    color: #d64545;
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.row>div {
+    flex: 1;
+    min-width: 220px;
+}
+
+.section {
+    margin-top: 24px;
+}
+
+/* Shared tokens (reuse your existing colors) */
+:root {
+    --line: #888;
+    --accent: #2d7ff9;
+    --accent-soft: #2d7ff933;
+    --warn: #f0a030;
+    --ok: #2e9e4f;
+    --bad: #d64545;
+    --radius: 6px;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+:root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+    background: Canvas;
+    color: CanvasText;
+}
+
+/* Your input rule hits every <input>; undo it for the custom controls */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+input[type="color"] {
+    width: auto;
+    padding: 0;
+}
+
+/* Keyboard focus for everything */
+:where(button, input, select, textarea, summary, .chip):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* --- Inline label (for checkbox / radio / switch) --- */
+label.inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+    margin: 6px 16px 6px 0;
+    cursor: pointer;
+}
+
+.stack label.inline {
+    display: flex;
+}
+
+/* --- Checkbox --- */
+input[type="checkbox"]:not(.switch) {
+    appearance: none;
+    margin: 0;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:not(.switch)::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0, 43% 62%);
+    background: #fff;
+    transform: scale(0);
+    transition: transform .12s;
+}
+
+input[type="checkbox"]:not(.switch):checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+input[type="checkbox"]:not(.switch):checked::before {
+    transform: scale(1);
+}
+
+input[type="checkbox"]:not(.switch):indeterminate {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+}
+
+input[type="checkbox"]:not(.switch):indeterminate::before {
+    clip-path: none;
+    height: 2px;
+    background: var(--accent);
+    transform: scale(1);
+}
+
+/* --- Radio --- */
+input[type="radio"] {
+    appearance: none;
+    margin: 0;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+
+input[type="radio"]::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: scale(0);
+    transition: transform .12s;
+}
+
+input[type="radio"]:checked {
+    border-color: var(--accent);
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+/* --- Toggle switch: <input type="checkbox" class="switch"> --- */
+input.switch {
+    appearance: none;
+    margin: 0;
+    flex: none;
+    cursor: pointer;
+    width: 36px;
+    height: 20px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    position: relative;
+    transition: background .15s, border-color .15s;
+}
+
+input.switch::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--line);
+    transition: transform .15s, background .15s;
+}
+
+input.switch:checked {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+}
+
+input.switch:checked::before {
+    transform: translateX(16px);
+    background: var(--accent);
+}
+
+/* --- Color picker --- */
+.color-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+input[type="color"] {
+    appearance: none;
+    flex: none;
+    width: 40px;
+    height: 34px;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: transparent;
+    cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 3px;
+}
+
+input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 3px;
+}
+
+.color-field input[type="text"] {
+    flex: 1;
+    text-transform: lowercase;
+}
+
+/* Swatch row */
+.swatches {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.swatch {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+}
+
+.swatch[aria-pressed="true"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* --- Range slider --- */
+.range-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.range-field output {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.9rem;
+    min-width: 3ch;
+    text-align: right;
+}
+
+input[type="range"] {
+    appearance: none;
+    flex: 1;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+}
+
+input[type="range"]::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+}
+
+input[type="range"]::-moz-range-progress {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--accent);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid Canvas;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid Canvas;
+}
+
+/* --- Select (wrap in .select for the chevron) --- */
+.select {
+    position: relative;
+}
+
+.select select {
+    appearance: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.9rem;
+    padding: 8px 32px 8px 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.select select option {
+    background: Canvas;
+    color: CanvasText;
+}
+
+.select::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    pointer-events: none;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-70%) rotate(45deg);
+    opacity: .7;
+}
+
+/* --- Number stepper --- */
+.stepper {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.stepper button {
+    width: 34px;
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.stepper button:hover {
+    background: var(--accent-soft);
+}
+
+.stepper input {
+    width: 64px;
+    border: none;
+    border-radius: 0;
+    text-align: center;
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    -moz-appearance: textfield;
+}
+
+.stepper input::-webkit-inner-spin-button,
+.stepper input::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+/* --- Segmented control (radio group) --- */
+.segmented {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.segmented input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.segmented label {
+    margin: 0;
+    padding: 6px 14px;
+    font-weight: 400;
+    cursor: pointer;
+    border-left: 1px solid var(--line);
+}
+
+.segmented label:first-of-type {
+    border-left: none;
+}
+
+.segmented input:checked+label {
+    background: var(--accent-soft);
+    color: inherit;
+    box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.segmented input:focus-visible+label {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+}
+
+/* --- Buttons: extend your .copy style --- */
+.btn {
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #8882;
+}
+
+.btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.btn.primary:hover {
+    background: #1f6fe6;
+}
+
+.btn.danger {
+    border-color: var(--bad);
+    color: var(--bad);
+}
+
+.btn.danger:hover {
+    background: #d6454522;
+}
+
+.btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* --- Disabled state for everything --- */
+:disabled,
+.is-disabled {
+    opacity: .45;
+    cursor: not-allowed !important;
+}
+
+/* --- Fieldset --- */
+fieldset {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 8px 14px 12px;
+    margin: 16px 0 0;
+}
+
+legend {
+    font-weight: 600;
+    padding: 0 6px;
+}
+
+/* --- Validation on text inputs --- */
+input.is-ok {
+    border-color: var(--ok);
+}
+
+input.is-bad {
+    border-color: var(--bad);
+}
+
+.hint {
+    font-size: 0.85rem;
+    opacity: .75;
+    margin-top: 4px;
+}
+
+.hint.bad {
+    opacity: 1;
+}
+
+/* --- Progress & meter --- */
+progress,
+meter {
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+    background: transparent;
+}
+
+progress::-webkit-progress-value {
+    background: var(--accent);
+    border-radius: 999px;
+}
+
+progress::-moz-progress-bar {
+    background: var(--accent);
+    border-radius: 999px;
+}
+
+meter::-webkit-meter-bar {
+    background: transparent;
+    border: none;
+    height: 8px;
+}
+
+meter::-webkit-meter-optimum-value {
+    background: var(--ok);
+}
+
+meter::-webkit-meter-suboptimum-value {
+    background: var(--warn);
+}
+
+meter::-webkit-meter-even-less-good-value {
+    background: var(--bad);
+}
+
+/* --- Collapsible (details/summary) --- */
+details {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    margin-top: 8px;
+}
+
+summary {
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+summary::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    flex: none;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform .15s;
+}
+
+details[open] summary::before {
+    transform: rotate(45deg);
+}
+
+details[open] summary {
+    margin-bottom: 8px;
+}
+
+/* --- Small extras --- */
+kbd {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.8rem;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 0 5px;
+}
+
+.badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0 7px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+}
+
+.badge.ok {
+    border-color: var(--ok);
+    background: #2e9e4f22;
+}
+
+.badge.bad {
+    border-color: var(--bad);
+    background: #d6454522;
+}
+
+.badge.warn {
+    border-color: var(--warn);
+    color: inherit;
+    background: #f0a03022;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+/* --- Page polish --- */
+h1 {
+    font-size: 1.75rem;
+    letter-spacing: -0.01em;
+}
+
+fieldset,
+.section {
+    margin-top: 20px;
+}
+
+.row {
+    gap: 16px 20px;
+}
+
+textarea:focus,
+input:focus {
+    border-color: var(--accent);
+}
+
+.btn,
+.chip {
+    transition: background .15s, border-color .15s, transform .05s;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn.primary {
+    padding: 8px 20px;
+    font-weight: 600;
+}
+
+#resultSel .btn {
+    margin-top: 8px;
+}
+
+.colors .hint {
+    margin: 4px 0 0;
+}
