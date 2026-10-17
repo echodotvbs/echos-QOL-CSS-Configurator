@@ -1,8 +1,9 @@
 import postcss from "postcss";
+import { asset } from "$app/paths";
 import { appState } from "./appState.svelte";
 
 export async function generate() {
-    const root = postcss.parse(await (await fetch('public/base.css')).text());
+    const root = postcss.parse(await (await fetch(asset('public/base.css'))).text());
 
     root.walkRules(':root', rule => {
         rule.walkDecls('--user-banner', decl => {
