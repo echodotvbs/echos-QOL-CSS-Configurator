@@ -1,100 +1,102 @@
 import postcss from "postcss";
 import { appState } from "./appState.svelte";
+import { createCache } from "./cache.svelte";
 
-const CSS_BASE_URL = "https://raw.githubusercontent.com/echodotvbs/echos-css-snippets/refs/heads/main/echos%20discord%20quality%20fixer%20thing/stable.css"
+const CSS_BASE_URL =
+    "https://raw.githubusercontent.com/echodotvbs/echos-css-snippets/refs/heads/main/echos%20discord%20quality%20fixer%20thing/stable.css";
+
+const cssCache = createCache<string, string>(async (url) => {
+    const res = await fetch(url);
+    return res.text();
+});
 
 export async function generate() {
-    const root = postcss.parse(await (await fetch(CSS_BASE_URL)).text());
+    const cssContent = await cssCache.get(CSS_BASE_URL);
+    const root = postcss.parse(cssContent);
 
-    root.walkRules(':root', rule => {
-        rule.walkDecls('--user-banner', decl => {
-            decl.value = appState.userBanner ? 'on' : 'off';
+    root.walkRules(":root", (rule) => {
+        rule.walkDecls("--user-banner", (decl) => {
+            decl.value = appState.userBanner ? "on" : "off";
         });
-        rule.walkDecls('--tint-profiles', decl => {
-            decl.value = appState.tintProfiles ? 'on' : 'off';
+        rule.walkDecls("--tint-profiles", (decl) => {
+            decl.value = appState.tintProfiles ? "on" : "off";
         });
-        rule.walkDecls('--account-hider', decl => {
-            decl.value = appState.dotsHiding ? 'on' : 'off';
+        rule.walkDecls("--account-hider", (decl) => {
+            decl.value = appState.dotsHiding ? "on" : "off";
         });
-        rule.walkDecls('--accent', decl => {
+        rule.walkDecls("--accent", (decl) => {
             decl.value = appState.accentColr;
         });
-        rule.walkDecls('--menu-max-height', decl => {
+        rule.walkDecls("--menu-max-height", (decl) => {
             decl.value = appState.menuHei;
         });
-        rule.walkDecls('--menu-max-width', decl => {
+        rule.walkDecls("--menu-max-width", (decl) => {
             decl.value = appState.menuWid;
         });
-        rule.walkDecls('--menu-border-radius', decl => {
+        rule.walkDecls("--menu-border-radius", (decl) => {
             decl.value = appState.menuBor;
         });
-        rule.walkDecls('--spoiler-blur-hover', decl => {
+        rule.walkDecls("--spoiler-blur-hover", (decl) => {
             decl.value = appState.miscSpoilBlur;
         });
-        rule.walkDecls('--message-hover-shift', decl => {
+        rule.walkDecls("--message-hover-shift", (decl) => {
             decl.value = appState.miscMesShift;
         });
-        rule.walkDecls('--hover-highlight-strength', decl => {
+        rule.walkDecls("--hover-highlight-strength", (decl) => {
             decl.value = appState.mischighLight;
         });
-        rule.walkDecls('--glass-blur', decl => {
+        rule.walkDecls("--glass-blur", (decl) => {
             decl.value = appState.miscglassBlur;
         });
-        rule.walkDecls('--userbar-autohide', decl => {
-            decl.value = appState.autoHideUsr ? '1' : '0';
+        rule.walkDecls("--userbar-autohide", (decl) => {
+            decl.value = appState.autoHideUsr ? "1" : "0";
         });
-        rule.walkDecls('--dm-btn-idle', decl => {
+        rule.walkDecls("--dm-btn-idle", (decl) => {
             decl.value = appState.dmButtonColr;
         });
-        rule.walkDecls('--dm-btn-hover', decl => {
+        rule.walkDecls("--dm-btn-hover", (decl) => {
             decl.value = appState.dmButtonHoverColr;
         });
-        rule.walkDecls('--pop-up-color', decl => {
+        rule.walkDecls("--pop-up-color", (decl) => {
             decl.value = appState.acrylicPopUpColr;
         });
-        rule.walkDecls('--tint-profiles', decl => {
-            decl.value = appState.autoHideUsr ? 'on' : 'off';
-        });
-        rule.walkDecls('--blur-popup', decl => {
+        rule.walkDecls("--blur-popup", (decl) => {
             decl.value = appState.acrylicBlurPopup;
         });
-
-        rule.walkDecls('--image-viewer-blur', decl => {
+        rule.walkDecls("--image-viewer-blur", (decl) => {
             decl.value = appState.imageViewerBlur;
         });
-        rule.walkDecls('--image-overlay-color', decl => {
+        rule.walkDecls("--image-overlay-color", (decl) => {
             decl.value = appState.imageOverlayColr;
         });
-        rule.walkDecls('--image-overlay-radius', decl => {
+        rule.walkDecls("--image-overlay-radius", (decl) => {
             decl.value = appState.imageOverlayRadius;
         });
-        rule.walkDecls('--server-highlight-fade-in', decl => {
+        rule.walkDecls("--server-highlight-fade-in", (decl) => {
             decl.value = appState.serverFadeIn;
         });
-        rule.walkDecls('--server-highlight-fade-out', decl => {
+        rule.walkDecls("--server-highlight-fade-out", (decl) => {
             decl.value = appState.serverFadeOut;
         });
-        rule.walkDecls('--server-highlight-dim', decl => {
+        rule.walkDecls("--server-highlight-dim", (decl) => {
             decl.value = appState.serverDim;
         });
-        rule.walkDecls('--message-highlight-fade-in', decl => {
+        rule.walkDecls("--message-highlight-fade-in", (decl) => {
             decl.value = appState.msgFadeIn;
         });
-        rule.walkDecls('--message-highlight-fade-out', decl => {
+        rule.walkDecls("--message-highlight-fade-out", (decl) => {
             decl.value = appState.msgFadeOut;
         });
-
-
-        rule.walkDecls('--typing-one', decl => {
+        rule.walkDecls("--typing-one", (decl) => {
             decl.value = appState.singleTyping;
         });
-        rule.walkDecls('--typing-many', decl => {
+        rule.walkDecls("--typing-many", (decl) => {
             decl.value = appState.moreThan2Typing;
         });
-        rule.walkDecls('--typing-several', decl => {
+        rule.walkDecls("--typing-several", (decl) => {
             decl.value = appState.severalTyping;
         });
-    })
+    });
 
-    return root.toString()
+    return root.toString();
 }
