@@ -6,15 +6,18 @@
     let result = $state("");
     let msg = $state("");
     let copied = $state(false);
+    let urlge = $state("")
 
     async function update() {
         try {
             if (oldCssUrl) {
                 oldCss = await (await fetch(oldCssUrl)).text()
             }
-            const { count, css } = await updateCss(oldCss);
+            const { count, css, url } = await updateCss(oldCss);
             result = css;
             copied = false;
+            urlge = window.location.origin + '/build' + url;
+
             msg = count
                 ? `Kept ${count} settings from your CSS.`
                 : "No known settings found in that CSS, used panel values.";
@@ -62,5 +65,9 @@
         <button class="btn" onclick={copyResult}>
             {copied ? "Copied!" : "Copy"}
         </button>
+        <label for="resultCssArea">
+            Or, copy this link below and paste it into your theme page:
+        </label>
+        <input type="text" readonly bind:value={urlge}>
     </div>
 {/if}

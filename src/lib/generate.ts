@@ -90,5 +90,6 @@ export function importCss(css: string) {
 
 export async function updateCss(oldCss: string) {
     const count = importCss(oldCss);
-    return { count, css: (await generate()).css };
+    const generated = await generate()
+    return { count, css: generated.css, url: generated.url };
 }
