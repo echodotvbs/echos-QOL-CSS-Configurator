@@ -2,12 +2,16 @@
     import { updateCss } from "#lib/generate.ts";
 
     let oldCss = $state("");
+    let oldCssUrl = $state("")
     let result = $state("");
     let msg = $state("");
     let copied = $state(false);
 
     async function update() {
         try {
+            if (oldCssUrl) {
+                oldCss = await (await fetch(oldCssUrl)).text()
+            }
             const { count, css } = await updateCss(oldCss);
             result = css;
             copied = false;
@@ -36,11 +40,13 @@
 <label for="oldCss">Your current QuickCSS</label>
 <textarea id="oldCss" bind:value={oldCss} rows="12" spellcheck="false"
 ></textarea>
+<label for="oldCssUrl">Or, an url</label>
+<input type="text" id="oldCssUrl" bind:value={oldCssUrl}>
 
 <button
     class="btn primary section"
     onclick={update}
-    disabled={!oldCss.trim()}
+    disabled={!oldCss.trim() && !oldCssUrl.trim()}
 >
     Update to latest
 </button>

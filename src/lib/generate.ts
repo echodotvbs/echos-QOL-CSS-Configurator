@@ -2,10 +2,10 @@ import postcss from "postcss";
 import { appState } from "./appState.svelte";
 import { createCache } from "./cache.svelte";
 
-const CSS_BASE_URL =
+export const CSS_BASE_URL =
     "https://raw.githubusercontent.com/echodotvbs/echos-css-snippets/refs/heads/main/echos%20discord%20quality%20fixer%20thing/stable.css";
 
-const cssCache = createCache<string, string>(async (url) => {
+export const cssCache = createCache<string, string>(async (url) => {
     const res = await fetch(url);
     return res.text();
 });
@@ -14,7 +14,7 @@ type Key = keyof typeof appState;
 // "str" = copied as is, "onoff" = on/off, "bit" = 1/0
 type Kind = "str" | "onoff" | "bit";
 
-const VARS: [cssVar: string, key: Key, kind: Kind][] = [
+export const VARS: [cssVar: string, key: Key, kind: Kind][] = [
     ["--user-banner", "userBanner", "onoff"],
     ["--tint-profiles", "tintProfiles", "onoff"],
     ["--account-hider", "dotsHiding", "onoff"],
@@ -50,7 +50,7 @@ const encode = (v: unknown, kind: Kind) =>
 const decode = (v: string, kind: Kind) =>
     kind === "onoff" ? v === "on" : kind === "bit" ? v === "1" : v;
 
-export async function generate() {
+export async function generate(): Promise<{ css: string; url: string }> {
     const cssContent = await cssCache.get(CSS_BASE_URL);
     const root = postcss.parse(cssContent);
 
@@ -62,7 +62,12 @@ export async function generate() {
         }
     });
 
-    return root.toString();
+    const query = new URLSearchParams();
+    for (const [, key, kind] of VARS) {
+        query.set(key, encode(appState[key], kind));
+    }
+
+    return { css: root.toString(), url: `?${query}` };
 }
 
 export function importCss(css: string) {
@@ -85,5 +90,5 @@ export function importCss(css: string) {
 
 export async function updateCss(oldCss: string) {
     const count = importCss(oldCss);
-    return { count, css: await generate() };
+    return { count, css: (await generate()).css };
 }

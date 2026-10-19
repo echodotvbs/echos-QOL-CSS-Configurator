@@ -1,13 +1,17 @@
 <script lang="ts">
     import { appState } from "#lib/appState.svelte.ts";
     import { generate } from "#lib/generate.ts";
+    import { page } from "$app/state";
     import { onMount } from "svelte";
 
     let result = $state("");
     let copied = $state(false);
+    let url = $state("")
 
     async function generateCallback() {
-        result = await generate();
+        const generated = await generate()
+        result = generated.css;
+        url = page.url + 'build' + generated.url;
         copied = false;
     }
 
@@ -303,5 +307,9 @@
         <button class="btn" onclick={copyResult}>
             {copied ? "Copied!" : "Copy"}
         </button>
+        <label for="resultCssArea">
+            Or, copy this link below and paste it into your theme page:
+        </label>
+        <input type="text" readonly bind:value={url}>
     </div>
 {/if}
