@@ -1,9 +1,10 @@
 import postcss from "postcss";
-import { asset } from "$app/paths";
 import { appState } from "./appState.svelte";
 
+const CSS_BASE_URL = "https://raw.githubusercontent.com/echodotvbs/echos-css-snippets/refs/heads/main/echos%20discord%20quality%20fixer%20thing/stable.css"
+
 export async function generate() {
-    const root = postcss.parse(await (await fetch(asset('public/base.css'))).text());
+    const root = postcss.parse(await (await fetch(CSS_BASE_URL)).text());
 
     root.walkRules(':root', rule => {
         rule.walkDecls('--user-banner', decl => {
