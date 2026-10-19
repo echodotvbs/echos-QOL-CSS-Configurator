@@ -10,93 +10,80 @@ const cssCache = createCache<string, string>(async (url) => {
     return res.text();
 });
 
+type Key = keyof typeof appState;
+// "str" = copied as is, "onoff" = on/off, "bit" = 1/0
+type Kind = "str" | "onoff" | "bit";
+
+const VARS: [cssVar: string, key: Key, kind: Kind][] = [
+    ["--user-banner", "userBanner", "onoff"],
+    ["--tint-profiles", "tintProfiles", "onoff"],
+    ["--account-hider", "dotsHiding", "onoff"],
+    ["--userbar-autohide", "autoHideUsr", "bit"],
+    ["--accent", "accentColr", "str"],
+    ["--dm-btn-idle", "dmButtonColr", "str"],
+    ["--dm-btn-hover", "dmButtonHoverColr", "str"],
+    ["--menu-max-height", "menuHei", "str"],
+    ["--menu-max-width", "menuWid", "str"],
+    ["--menu-border-radius", "menuBor", "str"],
+    ["--pop-up-color", "acrylicPopUpColr", "str"],
+    ["--blur-popup", "acrylicBlurPopup", "str"],
+    ["--image-viewer-blur", "imageViewerBlur", "str"],
+    ["--image-overlay-color", "imageOverlayColr", "str"],
+    ["--image-overlay-radius", "imageOverlayRadius", "str"],
+    ["--server-highlight-fade-in", "serverFadeIn", "str"],
+    ["--server-highlight-fade-out", "serverFadeOut", "str"],
+    ["--server-highlight-dim", "serverDim", "str"],
+    ["--message-highlight-fade-in", "msgFadeIn", "str"],
+    ["--message-highlight-fade-out", "msgFadeOut", "str"],
+    ["--typing-one", "singleTyping", "str"],
+    ["--typing-many", "moreThan2Typing", "str"],
+    ["--typing-several", "severalTyping", "str"],
+    ["--spoiler-blur-hover", "miscSpoilBlur", "str"],
+    ["--message-hover-shift", "miscMesShift", "str"],
+    ["--hover-highlight-strength", "mischighLight", "str"],
+    ["--glass-blur", "miscglassBlur", "str"],
+];
+
+const encode = (v: unknown, kind: Kind) =>
+    kind === "onoff" ? (v ? "on" : "off") : kind === "bit" ? (v ? "1" : "0") : String(v);
+
+const decode = (v: string, kind: Kind) =>
+    kind === "onoff" ? v === "on" : kind === "bit" ? v === "1" : v;
+
 export async function generate() {
     const cssContent = await cssCache.get(CSS_BASE_URL);
     const root = postcss.parse(cssContent);
 
     root.walkRules(":root", (rule) => {
-        rule.walkDecls("--user-banner", (decl) => {
-            decl.value = appState.userBanner ? "on" : "off";
-        });
-        rule.walkDecls("--tint-profiles", (decl) => {
-            decl.value = appState.tintProfiles ? "on" : "off";
-        });
-        rule.walkDecls("--account-hider", (decl) => {
-            decl.value = appState.dotsHiding ? "on" : "off";
-        });
-        rule.walkDecls("--accent", (decl) => {
-            decl.value = appState.accentColr;
-        });
-        rule.walkDecls("--menu-max-height", (decl) => {
-            decl.value = appState.menuHei;
-        });
-        rule.walkDecls("--menu-max-width", (decl) => {
-            decl.value = appState.menuWid;
-        });
-        rule.walkDecls("--menu-border-radius", (decl) => {
-            decl.value = appState.menuBor;
-        });
-        rule.walkDecls("--spoiler-blur-hover", (decl) => {
-            decl.value = appState.miscSpoilBlur;
-        });
-        rule.walkDecls("--message-hover-shift", (decl) => {
-            decl.value = appState.miscMesShift;
-        });
-        rule.walkDecls("--hover-highlight-strength", (decl) => {
-            decl.value = appState.mischighLight;
-        });
-        rule.walkDecls("--glass-blur", (decl) => {
-            decl.value = appState.miscglassBlur;
-        });
-        rule.walkDecls("--userbar-autohide", (decl) => {
-            decl.value = appState.autoHideUsr ? "1" : "0";
-        });
-        rule.walkDecls("--dm-btn-idle", (decl) => {
-            decl.value = appState.dmButtonColr;
-        });
-        rule.walkDecls("--dm-btn-hover", (decl) => {
-            decl.value = appState.dmButtonHoverColr;
-        });
-        rule.walkDecls("--pop-up-color", (decl) => {
-            decl.value = appState.acrylicPopUpColr;
-        });
-        rule.walkDecls("--blur-popup", (decl) => {
-            decl.value = appState.acrylicBlurPopup;
-        });
-        rule.walkDecls("--image-viewer-blur", (decl) => {
-            decl.value = appState.imageViewerBlur;
-        });
-        rule.walkDecls("--image-overlay-color", (decl) => {
-            decl.value = appState.imageOverlayColr;
-        });
-        rule.walkDecls("--image-overlay-radius", (decl) => {
-            decl.value = appState.imageOverlayRadius;
-        });
-        rule.walkDecls("--server-highlight-fade-in", (decl) => {
-            decl.value = appState.serverFadeIn;
-        });
-        rule.walkDecls("--server-highlight-fade-out", (decl) => {
-            decl.value = appState.serverFadeOut;
-        });
-        rule.walkDecls("--server-highlight-dim", (decl) => {
-            decl.value = appState.serverDim;
-        });
-        rule.walkDecls("--message-highlight-fade-in", (decl) => {
-            decl.value = appState.msgFadeIn;
-        });
-        rule.walkDecls("--message-highlight-fade-out", (decl) => {
-            decl.value = appState.msgFadeOut;
-        });
-        rule.walkDecls("--typing-one", (decl) => {
-            decl.value = appState.singleTyping;
-        });
-        rule.walkDecls("--typing-many", (decl) => {
-            decl.value = appState.moreThan2Typing;
-        });
-        rule.walkDecls("--typing-several", (decl) => {
-            decl.value = appState.severalTyping;
-        });
+        for (const [cssVar, key, kind] of VARS) {
+            rule.walkDecls(cssVar, (decl) => {
+                decl.value = encode(appState[key], kind);
+            });
+        }
     });
 
     return root.toString();
+}
+
+export function importCss(css: string) {
+    const found: Record<string, string> = {};
+    postcss.parse(css).walkRules(":root", (rule) => {
+        rule.walkDecls((decl) => {
+            if (decl.prop.startsWith("--")) found[decl.prop] = decl.value.trim();
+        });
+    });
+
+    let count = 0;
+    for (const [cssVar, key, kind] of VARS) {
+        if (cssVar in found) {
+            (appState as Record<Key, unknown>)[key] = decode(found[cssVar], kind);
+            count++;
+        }
+    }
+    return count;
+}
+
+export async function updateCss(oldCss: string) {
+    const count = importCss(oldCss);
+    return { count, css: await generate() };
 }
