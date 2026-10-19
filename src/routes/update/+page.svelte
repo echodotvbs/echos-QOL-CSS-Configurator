@@ -1,5 +1,6 @@
 <script lang="ts">
     import { updateCss } from "#lib/generate.ts";
+    import { resolve } from "$app/paths";
 
     let oldCss = $state("");
     let oldCssUrl = $state("")
@@ -16,7 +17,7 @@
             const { count, css, url } = await updateCss(oldCss);
             result = css;
             copied = false;
-            urlge = window.location.origin + '/build' + url;
+            urlge = window.location.origin + resolve('/build') + url;
 
             msg = count
                 ? `Kept ${count} settings from your CSS.`
