@@ -1,5 +1,5 @@
 import tailwindcss from '@tailwindcss/vite';
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
@@ -13,9 +13,7 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			adapter: adapter({ strict: false }),
-			// GitHub Pages serves project sites from /<repo>; CI sets BASE_PATH
-			paths: { base: (process.env.BASE_PATH ?? '') as '' | `/${string}` }
+			adapter: adapter()
 		})
 	]
 });
