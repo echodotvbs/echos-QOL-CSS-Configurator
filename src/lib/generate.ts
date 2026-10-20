@@ -11,8 +11,7 @@ export const cssCache = createCache<string, string>(async (url) => {
 });
 
 type Key = keyof typeof appState;
-// "str" = copied as is, "onoff" = on/off, "bit" = 1/0
-type Kind = "str" | "onoff" | "bit";
+type Kind = "str" | "onoff" | "bit" | "quoted";
 
 export const VARS: [cssVar: string, key: Key, kind: Kind][] = [
     ["--user-banner", "userBanner", "onoff"],
@@ -20,6 +19,7 @@ export const VARS: [cssVar: string, key: Key, kind: Kind][] = [
     ["--account-hider", "dotsHiding", "onoff"],
     ["--userbar-autohide", "autoHideUsr", "bit"],
     ["--accent", "accentColr", "str"],
+    ["--folder-cover-color", "folderCoverClr", "str"],
     ["--dm-btn-idle", "dmButtonColr", "str"],
     ["--dm-btn-hover", "dmButtonHoverColr", "str"],
     ["--menu-max-height", "menuHei", "str"],
@@ -35,9 +35,9 @@ export const VARS: [cssVar: string, key: Key, kind: Kind][] = [
     ["--server-highlight-dim", "serverDim", "str"],
     ["--message-highlight-fade-in", "msgFadeIn", "str"],
     ["--message-highlight-fade-out", "msgFadeOut", "str"],
-    ["--typing-one", "singleTyping", "str"],
-    ["--typing-many", "moreThan2Typing", "str"],
-    ["--typing-several", "severalTyping", "str"],
+    ["--typing-one", "singleTyping", "quoted"],
+    ["--typing-many", "moreThan2Typing", "quoted"],
+    ["--typing-several", "severalTyping", "quoted"],
     ["--spoiler-blur-hover", "miscSpoilBlur", "str"],
     ["--message-hover-shift", "miscMesShift", "str"],
     ["--hover-highlight-strength", "mischighLight", "str"],
@@ -45,10 +45,21 @@ export const VARS: [cssVar: string, key: Key, kind: Kind][] = [
 ];
 
 const encode = (v: unknown, kind: Kind) =>
-    kind === "onoff" ? (v ? "on" : "off") : kind === "bit" ? (v ? "1" : "0") : String(v);
+    kind === "quoted"
+        ? JSON.stringify(String(v))
+        : kind === "onoff" ? (v ? "on" : "off") : kind === "bit" ? (v ? "1" : "0") : String(v);
+
+function unquote(v: string) {
+    try {
+        return JSON.parse(v) as string;
+    } catch {
+        const q = v[0];
+        return (q === '"' || q === "'") && v.length > 1 && v.endsWith(q) ? v.slice(1, -1) : v;
+    }
+}
 
 const decode = (v: string, kind: Kind) =>
-    kind === "onoff" ? v === "on" : kind === "bit" ? v === "1" : v;
+    kind === "quoted" ? unquote(v) : kind === "onoff" ? v === "on" : kind === "bit" ? v === "1" : v;
 
 export async function generate(): Promise<{ css: string; url: string }> {
     const cssContent = await cssCache.get(CSS_BASE_URL);

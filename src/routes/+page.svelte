@@ -26,7 +26,7 @@
         {
             id: "c-folder",
             label: "Folder cover color",
-            key: "folderColr",
+            key: "folderCoverClr",
             hint: "",
         },
         {
@@ -119,18 +119,19 @@
 
 <fieldset class="section">
     <legend>Typing</legend>
+    <p class="hint">Plain text, no quotes needed. Keep the leading space for the first two so the name does not stick to the text.</p>
     <div class="row">
         <div>
-            <label for="menu-height">Single person typing</label>
-            <input type="text" id="menu-height" bind:value={appState.singleTyping} />
+            <label for="typing-one">Single person typing</label>
+            <input type="text" id="typing-one" bind:value={appState.singleTyping} />
         </div>
         <div>
-            <label for="menu-width">More than 2 people typing</label>
-            <input type="text" id="menu-width" bind:value={appState.moreThan2Typing} />
+            <label for="typing-many">More than 2 people typing</label>
+            <input type="text" id="typing-many" bind:value={appState.moreThan2Typing} />
         </div>
         <div>
-            <label for="menu-radius">Several people typing</label>
-            <input type="text" id="menu-radius" bind:value={appState.severalTyping} />
+            <label for="typing-several">Several people typing</label>
+            <input type="text" id="typing-several" bind:value={appState.severalTyping} />
         </div>
     </div>
 </fieldset>

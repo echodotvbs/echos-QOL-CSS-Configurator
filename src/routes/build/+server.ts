@@ -5,7 +5,7 @@ import postcss from 'postcss';
 import { CSS_BASE_URL, cssCache, VARS } from '#lib/generate.ts';
 
 type Key = keyof typeof appState;
-type Kind = "str" | "onoff" | "bit";
+type Kind = "str" | "onoff" | "bit" | "quoted";
 
 
 function isKey(k: string): k is Key {
@@ -18,6 +18,8 @@ function encodeParam(value: string, kind: Kind): string {
 			return ["on", "1", "true"].includes(value) ? "on" : "off";
 		case "bit":
 			return ["1", "on", "true"].includes(value) ? "1" : "0";
+		case "quoted":
+			return value.startsWith('"') ? value : JSON.stringify(value);
 		case "str":
 			return value;
 	}

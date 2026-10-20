@@ -8,7 +8,7 @@ export const appState: AppStateType = $state({ // appstate exactly like glimmer'
 
     // colrs
     accentColr: "#815364",
-    folderColr: "#815364",
+    folderCoverClr: "#ffaac9",
     dmButtonColr: "#36101D",
     dmButtonHoverColr: "#754454",
 
@@ -24,9 +24,9 @@ export const appState: AppStateType = $state({ // appstate exactly like glimmer'
     acrylicPopUpColr: "#000000",
 
     // typing 
-    singleTyping: "is typing...",
-    moreThan2Typing: "are typing...",
-    severalTyping: "Several people are typing",
+    singleTyping: " is typing...",
+    moreThan2Typing: " are typing...",
+    severalTyping: "Several people are typing...",
 
     // image viewer
     imageViewerBlur: "4px",
@@ -56,7 +56,7 @@ type AppStateType = {
 
     // colrs
     accentColr: string;
-    folderColr: string;
+    folderCoverClr: string;
     dmButtonColr: string;
     dmButtonHoverColr: string;
 
